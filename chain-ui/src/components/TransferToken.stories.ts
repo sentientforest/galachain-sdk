@@ -16,6 +16,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import TransferToken from './TransferToken.vue'
+import { createValidChainObject, createValidDTO, TokenBalance, TokenBalanceWithMetadata, TokenClass } from '@gala-chain/api'
+import BigNumber from 'bignumber.js'
 
 const meta: Meta<typeof TransferToken> = {
   component: TransferToken
@@ -24,8 +26,18 @@ const meta: Meta<typeof TransferToken> = {
 export default meta
 type Story = StoryObj<typeof TransferToken>
 
-const tokenBalance = {
-  token: {
+const balance = new TokenBalance({
+  additionalKey: 'none',
+  category: 'Unit',
+  collection: 'GALA',
+  owner: '',
+  type: 'none'
+});
+
+balance.ensureCanAddQuantity(new BigNumber('1000')).add();
+
+const tokenBalance = await createValidDTO(TokenBalanceWithMetadata, {
+  token: await createValidChainObject(TokenClass, {
     additionalKey: 'none',
     authorities: [],
     category: 'Unit',
@@ -34,48 +46,40 @@ const tokenBalance = {
     description: 'GALA token',
     image: 'https://app.gala.games/_nuxt/img/GALA-icon.b642e24.png',
     isNonFungible: false,
-    maxCapacity: '50000000000',
-    maxSupply: '50000000000',
+    maxCapacity: new BigNumber('50000000000'),
+    maxSupply: new BigNumber('50000000000'),
     name: 'GALA',
     network: 'GC',
     symbol: 'GALA',
-    totalBurned: '0',
-    totalMintAllowance: '0',
-    totalSupply: '50000000000',
+    totalBurned: new BigNumber('0'),
+    totalMintAllowance: new BigNumber('0'),
+    totalSupply: new BigNumber('50000000000'),
     type: 'none'
-  },
-  balance: {
-    additionalKey: 'none',
-    category: 'Unit',
-    collection: 'GALA',
-    inUseHolds: [],
-    instanceIds: [],
-    lockedHolds: [],
-    owner: '',
-    quantity: '1000',
-    type: 'none'
+  }),
+  balance
+});
+
+// const Template = (args: any) => ({
+//   components: { TransferToken },
+//   setup() {
+//     return { args }
+//   },
+//   methods: { submit: action('submit') },
+//   template: '<TransferToken v-bind="args" @submit="submit"/>'
+// })
+
+export const Primary: Story = {
+  args: {
+    tokenBalance,
+    loading: false,
+    disabled: false
   }
 }
 
-const Template = (args) => ({
-  components: { TransferToken },
-  setup() {
-    return { args }
-  },
-  methods: { submit: action('submit') },
-  template: '<TransferToken v-bind="args" @submit="submit"/>'
-})
-
-export const Primary: Story = Template.bind({})
-Primary.args = {
-  tokenBalance,
-  loading: false,
-  disabled: false
-}
-
-export const Empty: Story = Template.bind({})
-Empty.args = {
-  tokenBalance: undefined,
-  loading: false,
-  disabled: false
+export const Empty: Story = {
+  args: {
+    tokenBalance: undefined,
+    loading: false,
+    disabled: false
+  }
 }

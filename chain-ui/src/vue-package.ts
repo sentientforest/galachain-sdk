@@ -13,4 +13,5 @@
  * limitations under the License.
  */
 
+import "./main.css"
 export * from './components'

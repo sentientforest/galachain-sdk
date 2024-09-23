@@ -16,11 +16,18 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+// @ts-expect-error 
 import dts from 'vite-plugin-dts'
 import { fileURLToPath } from 'url'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+// import resolve from "@rollup/plugin-node-resolve";
 
+// https://nx.dev/recipes/vite/configure-vite
 // https://vitejs.dev/config/
 export default defineConfig({
+  root: "chain-ui",
   plugins: [
     vue({
       template: {
@@ -30,8 +37,30 @@ export default defineConfig({
         }
       }
     }),
-    dts()
+    // nxViteTsPaths({debug: true}),
+    dts(),
   ],
+  css: {
+    postcss: {
+      plugins: [tailwindcss({
+        content: [
+          'tailwind.config.js',
+          'index.html',
+          'src/components/**/*.{js,vue,ts}',
+          'src/elements/**/*.{js,vue,vs}',
+          'src/theme/primevue/**/*.js',
+          'chain-ui/tailwind.config.js',
+          'chain-ui/index.html',
+          'chain-ui/src/components/**/*.{js,vue,ts}',
+          'chain-ui/src/elements/**/*.{js,vue,vs}',
+          'chain-ui/src/theme/primevue/**/*.js',
+          // './node_modules/@gala-chain/ui/**/*.{vue,js,ts,jsx,tsx}'
+        ],
+      }),
+      autoprefixer(),
+    ]
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -56,7 +85,15 @@ export default defineConfig({
         globals: {
           vue: 'Vue'
         }
-      }
+      },
+      // plugins: [
+      //   resolve({
+      //     moduleDirectories: [
+      //       fileURLToPath(new URL("node_modules/", import.meta.url)),
+      //       fileURLToPath(new URL("../node_modules/", import.meta.url))
+      //     ]
+      //   })
+      // ]
     }
   }
 })

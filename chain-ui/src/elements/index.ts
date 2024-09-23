@@ -20,9 +20,7 @@ import primevueTheme from '../theme/primevue/gala'
 import TransferTokenComponent from '../elements/TransferToken.ce.vue'
 import MintTokenComponent from '../elements/MintToken.ce.vue'
 import MintTokenWithAllowanceComponent from '../elements/MintTokenWithAllowance.ce.vue'
-import type { TransferTokenProps } from '../components/TransferToken.vue'
-import type { MintTokenProps } from '../components/MintToken.vue'
-import type { MintTokenWithAllowanceProps } from '../components/MintTokenWithAllowance.vue'
+import type { MintTokenProps, MintTokenWithAllowanceProps, TransferTokenProps } from '../types/props'
 
 const defineCustomElementWithOptions = <T>(component: Component) => {
   // TODO change types so contructor param "initialProps" is typed to component props

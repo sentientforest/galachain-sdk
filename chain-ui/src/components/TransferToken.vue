@@ -19,17 +19,9 @@ import { TokenBalanceWithMetadata, TransferTokenDto } from '@gala-chain/api'
 import GalaSend, { type TokenClassBalance } from '@/components/common/Send.vue'
 import { calculateAvailableBalance } from '@/utils/calculateBalance'
 import { TokenBalance } from '@gala-chain/api'
-import type { IGalaChainError } from '@/types/galachain-error'
+import { type IGalaChainError } from '@/types/galachain-error'
 import PrimeSkeleton from 'primevue/skeleton'
-
-export interface TransferTokenProps {
-  /** User token balance */
-  tokenBalance?: TokenBalanceWithMetadata
-  /** Submit button loading state */
-  loading?: boolean
-  /** Submit button disabled state */
-  disabled?: boolean
-}
+import type { TransferTokenProps } from "@/types/props";
 
 export interface TransferTokenEmits {
   /** Fired when the form is successfully submitted */

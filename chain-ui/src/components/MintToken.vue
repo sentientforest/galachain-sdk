@@ -19,13 +19,9 @@ import { TokenClass, MintTokenDto, TransferTokenDto } from '@gala-chain/api'
 import GalaSend, { type TokenClassBalance } from '@/components/common/Send.vue'
 import { TokenAllowance } from '@gala-chain/api'
 import { calculateAvailableMintAllowances } from '@/utils/calculateBalance'
-import type { IGalaChainError } from '../types/galachain-error'
+import { type IGalaChainError } from '@/types/galachain-error'
 import PrimeSkeleton from 'primevue/skeleton'
-
-export interface MintTokenProps {
-  tokenAllowance?: { token: TokenClass; allowances: TokenAllowance[] }
-  loading?: boolean
-}
+import type { MintTokenProps } from '@/types/props'
 
 const props = defineProps<MintTokenProps>()
 
@@ -70,7 +66,7 @@ const submit = (payload: TransferTokenDto) => {
     :loading="loading"
     :show-recipient="false"
     @submit="submit"
-    @error="(event) => emit('error', event)"
+    @error="(event: any) => emit('error', event)"
     to-header="Mint to"
     submit-text="Mint"
   >

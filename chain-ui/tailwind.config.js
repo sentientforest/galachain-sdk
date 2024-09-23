@@ -16,6 +16,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const defaultTheme = require('tailwindcss/defaultTheme')
 const plugin = require('tailwindcss/plugin')
+// @ts-expect-error no declared types at this time
+import primeui from 'tailwindcss-primeui';
 //const headlessUiPlugin = require('@headlessui/tailwindcss')
 //const { tailwindcssOriginSafelist } = require('@headlessui-float/vue')
 
@@ -112,8 +114,14 @@ export default {
   content: [
     './index.html',
     './src/components/**/*.{js,vue,ts}',
+    './src/elements/**/*.{js,vue,vs}',
     './src/theme/primevue/**/*.js',
-    './node_modules/@gala-chain/ui/**/*.{vue,js,ts,jsx,tsx}'
+    './node_modules/@gala-chain/ui/**/*.{vue,js,ts,jsx,tsx}',
+    'chain-ui/tailwind.config.js',
+          'chain-ui/index.html',
+          'chain-ui/src/components/**/*.{js,vue,ts}',
+          'chain-ui/src/elements/**/*.{js,vue,vs}',
+          'chain-ui/src/theme/primevue/**/*.js',
   ],
   //safelist: [...tailwindcssOriginSafelist],
   theme: {
@@ -152,7 +160,10 @@ export default {
         // for primevue theme
         ...Object.keys(themeColors).reduce((acc, color) => {
           const colorShades = Object.keys(themeColors[color]).reduce((acc, shade) => {
-            acc[`${color}-${shade}`] = `rgb(var(--${color}-${shade}))`
+            if (acc[`${color}`] === undefined) {
+              acc[`${color}`] = {};
+            }
+            acc[`${color}`][`${shade}`] = `rgb(var(--${color}-${shade}))`
             return acc
           }, {})
           return {
@@ -187,6 +198,7 @@ export default {
     }
   },
   plugins: [
+    primeui,
     //headlessUiPlugin,
     plugin(function ({ addBase, addComponents, addVariant }) {
       addBase({

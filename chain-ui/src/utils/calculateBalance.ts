@@ -18,19 +18,20 @@ import BigNumber from 'bignumber.js'
 
 export const calculateAvailableBalance = (balance: TokenBalance) => {
   const now = Date.now()
-  const locked = balance?.lockedHolds?.reduce((acc, hold) => {
+  const locked = balance?.getUnexpiredLockedHolds(Date.now())?.reduce((acc, hold) => {
     if (hold.expires && hold.expires < now) {
       return acc
     }
     return acc.plus(hold.quantity)
-  }, BigNumber(0))
-  const available = BigNumber(balance?.quantity ?? 0).minus(locked ?? BigNumber(0))
+  }, BigNumber(0));
+  const spendable = BigNumber(balance?.getSpendableQuantityTotal(Date.now()) ?? 0);
+  const available = spendable.minus(locked ?? BigNumber(0))
   return BigNumber.max(available, BigNumber(0))
 }
 
 export const calculateAvailableMintAllowances = (allowances: TokenAllowance[]) => {
   return allowances.reduce((total, allowance) => {
-    const availableAllowance = BigNumber(allowance.quantity).minus(allowance.quantitySpent)
+    const availableAllowance = BigNumber(allowance.quantity).minus(allowance.quantitySpent ?? new BigNumber("0"))
     return total.plus(availableAllowance)
   }, new BigNumber(0))
 }

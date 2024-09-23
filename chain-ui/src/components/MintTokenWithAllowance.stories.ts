@@ -16,15 +16,20 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import MintTokenWithAllowance from './MintTokenWithAllowance.vue'
+import { createValidChainObject, TokenClass } from '@gala-chain/api';
+import BigNumber from 'bignumber.js';
 
 const meta: Meta<typeof MintTokenWithAllowance> = {
-  component: MintTokenWithAllowance
+  component: MintTokenWithAllowance,
+  args: {
+    onSubmit: action('submit')
+  }
 }
 
 export default meta
 type Story = StoryObj<typeof MintTokenWithAllowance>
 
-const token = {
+const token = await createValidChainObject(TokenClass, {
   additionalKey: 'none',
   authorities: ['client|test'],
   category: 'Unit',
@@ -33,40 +38,33 @@ const token = {
   description: 'GALA token',
   image: 'https://app.gala.games/_nuxt/img/GALA-icon.b642e24.png',
   isNonFungible: false,
-  knownMintAllowanceSupply: '5000000000',
-  knownMintSupply: '50000000000',
-  maxCapacity: '50000000000',
-  maxSupply: '50000000000',
+  knownMintAllowanceSupply: new BigNumber('5000000000'),
+  knownMintSupply: new BigNumber('50000000000'),
+  maxCapacity: new BigNumber('50000000000'),
+  maxSupply: new BigNumber('50000000000'),
   name: 'GALA',
   network: 'GC',
   symbol: 'GALA',
-  totalBurned: '5000',
-  totalMintAllowance: '50000000000',
-  totalSupply: '50000000000',
+  totalBurned: new BigNumber('5000'),
+  totalMintAllowance: new BigNumber('50000000000'),
+  totalSupply: new BigNumber('50000000000'),
   type: 'none'
+});
+
+export const Primary: Story = {
+  args: {
+    token,
+    address: 'client|test',
+    loading: false,
+    disabled: false
+  }
 }
 
-const Template = (args) => ({
-  components: { MintTokenWithAllowance },
-  setup() {
-    return { args }
-  },
-  methods: { submit: action('submit') },
-  template: '<MintTokenWithAllowance v-bind="args" @submit="submit"/>'
-})
-
-export const Primary: Story = Template.bind({})
-Primary.args = {
-  token,
-  address: 'client|test',
-  loading: false,
-  disabled: false
-}
-
-export const Empty: Story = Template.bind({})
-Empty.args = {
-  token: undefined,
-  address: 'client|test',
-  loading: false,
-  disabled: false
+export const Empty: Story = {
+  args: {
+    token: undefined,
+    address: 'client|test',
+    loading: false,
+    disabled: false
+  }
 }

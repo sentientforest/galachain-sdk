@@ -18,8 +18,21 @@
  */
 import { ChainObject, ClassConstructor, NonFunctionProperties, RangedChainObject } from "@gala-chain/api";
 
-export async function createValidChainObject<T extends ChainObject | RangedChainObject>(
+export async function createValidChainObject<T extends ChainObject>(
   constructor: ClassConstructor<T>,
+  plain: NonFunctionProperties<T>
+): Promise<T> {
+  const obj = new constructor();
+  Object.entries(plain).forEach(([k, v]) => {
+    obj[k] = v;
+  });
+
+  await obj.validateOrReject();
+
+  return obj;
+}
+
+export async function createValidRangedChainObject<T extends RangedChainObject>(  constructor: ClassConstructor<T>,
   plain: NonFunctionProperties<T>
 ): Promise<T> {
   const obj = new constructor();

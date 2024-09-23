@@ -16,16 +16,21 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import MintToken from './MintToken.vue'
+import { createValidChainObject, TokenAllowance, TokenClass } from '@gala-chain/api'
+import BigNumber from 'bignumber.js'
 
 const meta: Meta<typeof MintToken> = {
-  component: MintToken
-}
+  component: MintToken,
+  args: {
+    onSubmit: action('submit')
+  }
+};
 
 export default meta
 type Story = StoryObj<typeof MintToken>
 
 const tokenAllowance = {
-  token: {
+  token: await createValidChainObject(TokenClass, {
     additionalKey: 'none',
     authorities: [],
     category: 'Unit',
@@ -34,18 +39,18 @@ const tokenAllowance = {
     description: 'GALA token',
     image: 'https://app.gala.games/_nuxt/img/GALA-icon.b642e24.png',
     isNonFungible: false,
-    maxCapacity: '50000000000',
-    maxSupply: '50000000000',
+    maxCapacity: new BigNumber('50000000000'),
+    maxSupply: new BigNumber('50000000000'),
     name: 'GALA',
     network: 'GC',
     symbol: 'GALA',
-    totalBurned: '0',
-    totalMintAllowance: '0',
-    totalSupply: '50000000000',
+    totalBurned: new BigNumber('0'),
+    totalMintAllowance: new BigNumber('0'),
+    totalSupply: new BigNumber('50000000000'),
     type: 'none'
-  },
+  }),
   allowances: [
-    {
+    await createValidChainObject(TokenAllowance, {
       additionalKey: 'none',
       allowanceType: 4,
       category: 'Unit',
@@ -54,35 +59,28 @@ const tokenAllowance = {
       expires: 0,
       grantedBy: '',
       grantedTo: '',
-      instance: '0',
-      quantity: '1000',
-      quantitySpent: '0',
+      instance: new BigNumber('0'),
+      quantity: new BigNumber('1000'),
+      quantitySpent: new BigNumber('0'),
       type: 'none',
-      uses: '1000',
-      usesSpent: '0'
-    }
+      uses: new BigNumber('1000'),
+      usesSpent: new BigNumber('0')
+    })
   ]
 }
 
-const Template = (args) => ({
-  components: { MintToken },
-  setup() {
-    return { args }
-  },
-  methods: { submit: action('submit') },
-  template: '<MintToken v-bind="args" @submit="submit"/>'
-})
+export const Primary: Story = {
+  args: {
+    tokenAllowance,
+    loading: false,
+    disabled: false
+  }
+};
 
-export const Primary: Story = Template.bind({})
-Primary.args = {
-  tokenAllowance,
-  loading: false,
-  disabled: false
-}
-
-export const Empty: Story = Template.bind({})
-Empty.args = {
-  tokenAllowance: undefined,
-  loading: false,
-  disabled: false
+export const Empty: Story = {
+  args: {
+    tokenAllowance: undefined,
+    loading: false,
+    disabled: false
+  }
 }

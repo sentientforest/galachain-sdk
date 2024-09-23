@@ -21,6 +21,8 @@
     "skipLibCheck": true,
     "noPropertyAccessFromIndexSignature": false,
     "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "types": ["vite/client"],
     "paths": {
       "@gala-chain/api": ["chain-api/src/index.ts"],
       "@gala-chain/chaincode": ["chaincode/src/index.ts"],
@@ -28,7 +30,7 @@
       "@gala-chain/client": ["chain-client/src/index.ts"],
       "@gala-chain/connect": ["chain-connect/src/index.ts"],
       "@gala-chain/test": ["chain-test/src/index.ts"],
-      "@gala-chain/ui": ["chain-ui/src/index.ts"]
+      "@gala-chain/ui": ["chain-ui/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"],
@@ -40,6 +42,9 @@
     "chain-test/**/*.ts",
     "chain-connect/**/*.ts",
     "chain-ui/**/*.ts",
+    "chain-ui/**/*.vue",
+    "chain-ui/**/*.css",
+    "chain-ui/**/*.js",
     "package.json",
     "chain-client/src/ops-api-config-schema.json"
   ]
